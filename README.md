@@ -1,7 +1,7 @@
 # Minesweeper game in ReactJS
 This is my version of the classic minesweeper game.  It is a desktop-only application.
 
-I built this app to exercise my knowledge of ReactJS and Redux.  There are things that can still be improved in this current verion. Please feel free to try it and give feedback when you can. Thanks.
+I built this app to exercise my knowledge of ReactJS and Redux.  There are things that can still be improved in this current version. Please feel free to try it and give feedback when you can. Thanks.
 
 
 *************************************************************************
