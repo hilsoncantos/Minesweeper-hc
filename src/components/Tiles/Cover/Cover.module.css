@@ -1,0 +1,10 @@
+.Cover {
+  position: absolute;
+  background-color: #4fdf4f;
+  z-index: 200;
+}
+
+.Cover div {
+  height: 3rem;
+  width: 3rem;
+}
