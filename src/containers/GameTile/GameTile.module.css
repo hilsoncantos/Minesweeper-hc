@@ -1,9 +1,10 @@
-.GameTile {
+/* .GameTile {
   box-sizing: border-box;
   position: static; 
 }
 
 .Container {
+  box-sizing: border-box;
   position: relative;
   width: 3rem;
   height: 3rem;
@@ -18,6 +19,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  width: 3rem;
+  height: 3rem;
+} */
+
+
+.GameTile {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: static; 
+}
+
+.Container {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+}
+
+.Image {
+  width: 100%;
+  height: 100%;
+}
+
+.InitialDiv {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   font-size: 2rem;
   font-weight: bold;
   width: 3rem;

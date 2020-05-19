@@ -15,7 +15,7 @@ const ClickMenu = (props) => {
         <li
           id={'flagId' + props.id} 
           onClick={props.flagClicked}
-          >{props.flagStatus ? 'Unflag' : 'Flag' }</li>
+          >{props.flagStatus ? 'Remove Flag' : 'Flag' }</li>
       </ul>
     );
   }

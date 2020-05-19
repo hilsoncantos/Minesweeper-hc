@@ -36,13 +36,14 @@ const GameTile = (props) => {
         <Cover 
           id={props.id}
           show={props.coverShow} 
-          clicked={props.clicked}>
+          clicked={props.clicked}
+          shade={props.shade}>
             {coverChild}
         </Cover>
         <Bottom
           id={props.id}
           adjacent={props.adjacent}
-          >
+          shade={props.shade}>
             {bottomChild}
           </Bottom>
       </div>

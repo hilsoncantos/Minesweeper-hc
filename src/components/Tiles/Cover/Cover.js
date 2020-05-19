@@ -8,7 +8,8 @@ const Cover = (props) => (
     id={'coverId' + props.id}
     onClick={props.clicked}
     style={{
-      opacity: props.show ? '1' : '0'      
+      opacity: props.show ? '1' : '0',
+      backgroundColor: props.shade ? '#4fdf4f' : '#20ac20' 
     }}
     >
     <div>

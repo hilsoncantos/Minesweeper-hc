@@ -1,4 +1,4 @@
-.Main {
+/* .Main {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -12,30 +12,77 @@
   z-index: 200;
 }
 
-.Game div:nth-child(32n+1),
-.Game div:nth-child(32n+3),
-.Game div:nth-child(32n+5),
-.Game div:nth-child(32n+7),
-.Game div:nth-child(32n+9),
-.Game div:nth-child(32n+11),
-.Game div:nth-child(32n+13),
-.Game div:nth-child(32n+15),
-.Game div:nth-child(32n+18),
-.Game div:nth-child(32n+20),
-.Game div:nth-child(32n+22),
-.Game div:nth-child(32n+24),
-.Game div:nth-child(32n+26),
-.Game div:nth-child(32n+28),
-.Game div:nth-child(32n+30),
-.Game div:nth-child(32n) {
-  opacity: 0.9;
-}
-
 .GameModal {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.BannerWin p {
+  margin: 0;
+  text-align: center;
+}
+
+.BannerWin p:first-child {
+  color: red;
+}
+
+.PlayAgain:last-child {
+  border: 1px solid green;
+  padding: 0.25rem 1rem;
+  border-radius: 1rem;
+  background-color: green;
+  color: white;
+}
+
+.PlayAgain:last-child:hover {
+  background-color: white;
+  color: green;
+  cursor: pointer;
+} */
+
+
+.Main {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.Game {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (3rem)[16];
+  grid-template-columns: repeat(16, 3rem);
+  z-index: 200;
+}
+
+.GameModal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .BannerWin p {

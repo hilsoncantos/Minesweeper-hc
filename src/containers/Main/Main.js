@@ -18,13 +18,14 @@ const Main = () => {
 
   const maxRow = 16;
   const maxCol = 16;
+  const maxNum = maxRow * maxCol;
   const bombsCount = 40;
   
   const dispatch =  useDispatch();
   const tilesWithBomb = useSelector(state => { return state.tilesWithBomb; });
   const tilesWithFlag = useSelector(state => { return state.tilesWithFlag; });
   const tilesOpened = useSelector(state => { return state.tilesOpened; });
-  
+
   const onTileFlagged = tileId => dispatch(actions.flagTile(tileId));
   const onTileOpened = tileId => dispatch(actions.openTile(tileId));
   const onUnFlagTile = tileId => dispatch(actions.unFlagTile(tileId));
@@ -62,50 +63,59 @@ const Main = () => {
     setModalIsShown(true);
   }
 
-  console.log(tilesOpened);
-
   const clickedHandler = (tileId) => {
     if ((tilesWithFlag.indexOf(tileId) > -1)) {
       return;
     } else if ((tilesWithBomb.indexOf(tileId) > -1)) {
       bombClicked(tileId);
-    } else if (((tilesOpened.length - 1) === (maxRow * maxCol - tilesWithBomb.length)) && !(tilesWithBomb.indexOf(tileId) > -1)) {
+    } else if (((tilesOpened.length - 1) === (maxRow * maxCol - tilesWithBomb.length)) && (tilesWithBomb.indexOf(tileId) === -1)) {
       onTileOpened(tileId);
       setGameWon(true);
-    } else if (!(tilesOpened.indexOf(tileId) > -1)) {
+    } else if ((tilesOpened.indexOf(tileId) === -1)) {
       onTileOpened(tileId);
       openAround(tileId);
     }
   };
 
+  const top_lft = (tileId) => (tileId - maxRow - 1);    // top-left
+  const top_ctr = (tileId) => (tileId - maxRow);        // top
+  const top_rht = (tileId) => (tileId - maxRow + 1);    // top-right
+  const ctr_rht = (tileId) => (tileId + 1);             // right
+  const btm_rht = (tileId) => (tileId + maxRow + 1);    // bottom-right
+  const btm_ctr = (tileId) => (tileId + maxRow);        // bottom
+  const btm_lft = (tileId) => (tileId + maxRow - 1);    // bottom-left
+  const ctr_lft = (tileId) => (tileId - 1);             // left
+
   const openAround = (tileId) => {
+
     if ((tileId % maxRow) === 0 ) {               // right edge tile
-      if ( ((tileId - maxRow - 1) > 0) && !(tilesWithBomb.indexOf(tileId - maxRow - 1) > -1) && !(tilesWithFlag.indexOf(tileId - maxRow - 1) > -1)  && !(tilesOpened.indexOf(tileId - maxRow - 1) > -1) ) { onTileOpened(tileId - maxRow - 1) }         // top-left
-      if ( ((tileId - maxRow) > 0) && !(tilesWithBomb.indexOf(tileId - maxRow) > -1) && !(tilesWithFlag.indexOf(tileId - maxRow) > -1) && !(tilesOpened.indexOf(tileId - maxRow) > -1) ) { onTileOpened(tileId - maxRow) }                     // top
-      if ( ((tileId + maxRow) > 0) && !(tilesWithBomb.indexOf(tileId + maxRow) > -1) && !(tilesWithFlag.indexOf(tileId + maxRow) > -1) && !(tilesOpened.indexOf(tileId + maxRow) > -1) ) { onTileOpened(tileId + maxRow) }                     // bottom
-      if ( ((tileId + maxRow - 1) > 0) && !(tilesWithBomb.indexOf(tileId + maxRow - 1) > -1) && !(tilesWithFlag.indexOf(tileId + maxRow - 1) > -1) && !(tilesOpened.indexOf(tileId + maxRow - 1) > -1) ) { onTileOpened(tileId + maxRow - 1) }         // bottom-left
-      if ( ((tileId - 1) > 0) && !(tilesWithBomb.indexOf(tileId - 1) > -1) && !(tilesWithFlag.indexOf(tileId - 1) > -1) && !(tilesOpened.indexOf(tileId - 1) > -1) ) { onTileOpened(tileId - 1) }                                    // left
+      if ( (top_lft(tileId) > 0) && (tilesWithBomb.indexOf(top_lft(tileId)) === -1) && (tilesWithFlag.indexOf(top_lft(tileId)) === -1)  && (tilesOpened.indexOf(top_lft(tileId)) === -1) ) { onTileOpened(top_lft(tileId)) }  // top-left
+      if ( (top_ctr(tileId) > 0) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
+      if ( (btm_ctr(tileId) > 0) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
+      if ( (btm_lft(tileId) > 0) && (tilesWithBomb.indexOf(btm_lft(tileId)) === -1) && (tilesWithFlag.indexOf(btm_lft(tileId)) === -1) && (tilesOpened.indexOf(btm_lft(tileId)) === -1) ) { onTileOpened(btm_lft(tileId)) } // bottom-left
+      if ( (ctr_lft(tileId) > 0) && (tilesWithBomb.indexOf(ctr_lft(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_lft(tileId)) === -1) && (tilesOpened.indexOf(ctr_lft(tileId)) === -1) ) { onTileOpened(ctr_lft(tileId)) } // left
+
     } else if (((tileId - 1) % maxRow) === 0) {   // left edge tile   
-      if ( ((tileId - maxRow) > 0) && !(tilesWithBomb.indexOf(tileId - maxRow) > -1) && !(tilesWithFlag.indexOf(tileId - maxRow) > -1) && !(tilesOpened.indexOf(tileId - maxRow) > -1) ) { onTileOpened(tileId - maxRow) }                     // top
-      if ( ((tileId - maxRow + 1) > 0) && !(tilesWithBomb.indexOf(tileId - maxRow + 1) > -1) && !(tilesWithFlag.indexOf(tileId - maxRow + 1) > -1) && !(tilesOpened.indexOf(tileId - maxRow + 1) > -1) ) { onTileOpened(tileId - maxRow + 1) }         // top-right
-      if ( ((tileId + 1) > 0) && !(tilesWithBomb.indexOf(tileId + 1) > -1) && !(tilesWithFlag.indexOf(tileId + 1) > -1) && !(tilesOpened.indexOf(tileId + 1) > -1) ) { onTileOpened(tileId + 1) }                                    // right
-      if ( ((tileId + maxRow + 1) > 0) && !(tilesWithBomb.indexOf(tileId + maxRow + 1) > -1) && !(tilesWithFlag.indexOf(tileId + maxRow + 1) > -1) && !(tilesOpened.indexOf(tileId + maxRow + 1) > -1) ) { onTileOpened(tileId + maxRow + 1) }         // bottom-right
-      if ( ((tileId + maxRow) > 0) && !(tilesWithBomb.indexOf(tileId + maxRow) > -1) && !(tilesWithFlag.indexOf(tileId + maxRow) > -1) && !(tilesOpened.indexOf(tileId + maxRow) > -1) ) { onTileOpened(tileId + maxRow) }                     // bottom
+      if ( (top_ctr(tileId) > 0) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
+      if ( (top_rht(tileId) > 0) && (tilesWithBomb.indexOf(top_rht(tileId)) === -1) && (tilesWithFlag.indexOf(top_rht(tileId)) === -1) && (tilesOpened.indexOf(top_rht(tileId)) === -1) ) { onTileOpened(top_rht(tileId)) } // top-right
+      if ( (ctr_rht(tileId) > 0) && (tilesWithBomb.indexOf(ctr_rht(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_rht(tileId)) === -1) && (tilesOpened.indexOf(ctr_rht(tileId)) === -1) ) { onTileOpened(ctr_rht(tileId)) } // right
+      if ( (btm_rht(tileId) > 0) && (tilesWithBomb.indexOf(btm_rht(tileId)) === -1) && (tilesWithFlag.indexOf(btm_rht(tileId)) === -1) && (tilesOpened.indexOf(btm_rht(tileId)) === -1) ) { onTileOpened(btm_rht(tileId)) } // bottom-right
+      if ( (btm_ctr(tileId) > 0) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
     } else {
-      if ( ((tileId - maxRow - 1) > 0) && !(tilesWithBomb.indexOf(tileId - maxRow - 1) > -1) && !(tilesWithFlag.indexOf(tileId - maxRow - 1) > -1) && !(tilesOpened.indexOf(tileId - maxRow - 1) > -1) ) { onTileOpened(tileId - maxRow - 1) }         // top-left
-      if ( ((tileId - maxRow) > 0) && !(tilesWithBomb.indexOf(tileId - maxRow) > -1) && !(tilesWithFlag.indexOf(tileId - maxRow) > -1) && !(tilesOpened.indexOf(tileId - maxRow) > -1) ) { onTileOpened(tileId - maxRow) }                     // top
-      if ( ((tileId - maxRow + 1) > 0) && !(tilesWithBomb.indexOf(tileId - maxRow + 1) > -1) && !(tilesWithFlag.indexOf(tileId - maxRow + 1) > -1) && !(tilesOpened.indexOf(tileId - maxRow + 1) > -1) ) { onTileOpened(tileId - maxRow + 1) }         // top-right
-      if ( ((tileId + 1) > 0) && !(tilesWithBomb.indexOf(tileId + 1) > -1) && !(tilesWithFlag.indexOf(tileId + 1) > -1) && !(tilesOpened.indexOf(tileId + 1) > -1) ) { onTileOpened(tileId + 1) }                                    // right
-      if ( ((tileId + maxRow + 1) > 0) && !(tilesWithBomb.indexOf(tileId + maxRow + 1) > -1) && !(tilesWithFlag.indexOf(tileId + maxRow + 1) > -1) && !(tilesOpened.indexOf(tileId + maxRow + 1) > -1) ) { onTileOpened(tileId + maxRow + 1) }         // bottom-right
-      if ( ((tileId + maxRow) > 0) && !(tilesWithBomb.indexOf(tileId + maxRow) > -1) && !(tilesWithFlag.indexOf(tileId + maxRow) > -1) && !(tilesOpened.indexOf(tileId + maxRow) > -1) ) { onTileOpened(tileId + maxRow) }                     // bottom
-      if ( ((tileId + maxRow - 1) > 0) && !(tilesWithBomb.indexOf(tileId + maxRow - 1) > -1) && !(tilesWithFlag.indexOf(tileId + maxRow - 1) > -1) && !(tilesOpened.indexOf(tileId + maxRow - 1) > -1) ) { onTileOpened(tileId + maxRow - 1) }         // bottom-left
-      if ( ((tileId - 1) > 0) && !(tilesWithBomb.indexOf(tileId - 1) > -1) && !(tilesWithFlag.indexOf(tileId - 1) > -1) && !(tilesOpened.indexOf(tileId - 1) > -1) ) { onTileOpened(tileId - 1) }                                    // left
-    }         
+      if ( (top_lft(tileId) > 0) && (tilesWithBomb.indexOf(top_lft(tileId)) === -1) && (tilesWithFlag.indexOf(top_lft(tileId)) === -1)  && (tilesOpened.indexOf(top_lft(tileId)) === -1) ) { onTileOpened(top_lft(tileId)) }  // top-left
+      if ( (top_ctr(tileId) > 0) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
+      if ( (top_rht(tileId) > 0) && (tilesWithBomb.indexOf(top_rht(tileId)) === -1) && (tilesWithFlag.indexOf(top_rht(tileId)) === -1) && (tilesOpened.indexOf(top_rht(tileId)) === -1) ) { onTileOpened(top_rht(tileId)) } // top-right
+      if ( (ctr_rht(tileId) > 0) && (tilesWithBomb.indexOf(ctr_rht(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_rht(tileId)) === -1) && (tilesOpened.indexOf(ctr_rht(tileId)) === -1) ) { onTileOpened(ctr_rht(tileId)) } // right
+      if ( (btm_rht(tileId) > 0) && (tilesWithBomb.indexOf(btm_rht(tileId)) === -1) && (tilesWithFlag.indexOf(btm_rht(tileId)) === -1) && (tilesOpened.indexOf(btm_rht(tileId)) === -1) ) { onTileOpened(btm_rht(tileId)) } // bottom-right
+      if ( (btm_ctr(tileId) > 0) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
+      if ( (btm_lft(tileId) > 0) && (tilesWithBomb.indexOf(btm_lft(tileId)) === -1) && (tilesWithFlag.indexOf(btm_lft(tileId)) === -1) && (tilesOpened.indexOf(btm_lft(tileId)) === -1) ) { onTileOpened(btm_lft(tileId)) } // bottom-left
+      if ( (ctr_lft(tileId) > 0) && (tilesWithBomb.indexOf(ctr_lft(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_lft(tileId)) === -1) && (tilesOpened.indexOf(ctr_lft(tileId)) === -1) ) { onTileOpened(ctr_lft(tileId)) } // left
+    }
   }
 
   const flagClickedHandler = (tileId) => {
-    if  (!(tilesOpened.indexOf(tileId) > -1) && 
-        !(tilesWithFlag.indexOf(tileId) > -1)) {
+    if  ((tilesOpened.indexOf(tileId) === -1) && 
+        (tilesWithFlag.indexOf(tileId) === -1)) {
       onTileFlagged(tileId);
     } else if ((tilesWithFlag.indexOf(tileId) > -1)) {
       onUnFlagTile(tileId);
@@ -120,59 +130,69 @@ const Main = () => {
     setGameCompleted(true);
   }
 
-  const genRandom = () => {
-    const minNum = 1;
-    const maxNum = maxRow * maxCol;
-    const randNo = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
-    return randNo;
-  }
-
   const hideBombs = () => {
-    for (let i = 0; i < bombsCount ; i++) {
-      onHideBomb(genRandom());
+    const randNos = [];
+    const minNum = 1;
+    while (randNos.length < bombsCount) {
+      let randNo = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
+      if (randNos.indexOf(randNo) === -1 ) {
+        randNos.push(randNo);
+        onHideBomb(randNo);
+      }
     }
   }
 
   const adjValCount = (tileId) => {
     let count = 0;
     if ((tileId % maxRow) === 0 ) {               // right edge tile
-      if ( ((tileId - maxRow - 1) > 0) &&  (tilesWithBomb.indexOf(tileId - maxRow - 1) > -1) ) { count++; } // top-left
-      if ( ((tileId - maxRow) > 0) &&  (tilesWithBomb.indexOf(tileId - maxRow) > -1) ) { count++; }         // top
-      if ( ((tileId + maxRow) > 0) &&  (tilesWithBomb.indexOf(tileId + maxRow) > -1) ) { count++; }         // bottom
-      if ( ((tileId + maxRow - 1) > 0) &&  (tilesWithBomb.indexOf(tileId + maxRow - 1) > -1) ) { count++; } // bottom-left
-      if ( ((tileId - 1) > 0) &&  (tilesWithBomb.indexOf(tileId - 1) > -1) ) { count++; }                   // left
+      if ( (top_lft(tileId) > 0) &&  (tilesWithBomb.indexOf(top_lft(tileId)) > -1) ) { count++; } // top-left
+      if ( (top_ctr(tileId) > 0) &&  (tilesWithBomb.indexOf(top_ctr(tileId)) > -1) ) { count++; } // top
+      if ( (btm_ctr(tileId) > 0) &&  (tilesWithBomb.indexOf(btm_ctr(tileId)) > -1) ) { count++; } // bottom
+      if ( (btm_lft(tileId) > 0) &&  (tilesWithBomb.indexOf(btm_lft(tileId)) > -1) ) { count++; } // bottom-left
+      if ( (ctr_lft(tileId) > 0) &&  (tilesWithBomb.indexOf(ctr_lft(tileId)) > -1) ) { count++; } // left
     } else if (((tileId - 1) % maxRow) === 0) {   // left edge tile
-      if ( ((tileId - maxRow) > 0) &&  (tilesWithBomb.indexOf(tileId - maxRow) > -1) ) { count++; }         // top
-      if ( ((tileId - maxRow + 1) > 0) &&  (tilesWithBomb.indexOf(tileId - maxRow + 1) > -1) ) { count++; } // top-right
-      if ( ((tileId + 1) > 0) &&  (tilesWithBomb.indexOf(tileId + 1) > -1) ) { count++; }                   // right
-      if ( ((tileId + maxRow + 1) > 0) &&  (tilesWithBomb.indexOf(tileId + maxRow + 1) > -1) ) { count++; } // bottom-right
-      if ( ((tileId + maxRow) > 0) &&  (tilesWithBomb.indexOf(tileId + maxRow) > -1) ) { count++; }         // bottom
+      if ( (top_ctr(tileId) > 0) &&  (tilesWithBomb.indexOf(top_ctr(tileId)) > -1) ) { count++; } // top
+      if ( (top_rht(tileId) > 0) &&  (tilesWithBomb.indexOf(top_rht(tileId)) > -1) ) { count++; } // top-right
+      if ( (ctr_rht(tileId) > 0) &&  (tilesWithBomb.indexOf(ctr_rht(tileId)) > -1) ) { count++; } // right
+      if ( (btm_rht(tileId) > 0) &&  (tilesWithBomb.indexOf(btm_rht(tileId)) > -1) ) { count++; } // bottom-right
+      if ( (btm_ctr(tileId) > 0) &&  (tilesWithBomb.indexOf(btm_ctr(tileId)) > -1) ) { count++; } // bottom
     } else {
-      if ( ((tileId - maxRow) > 0) &&  (tilesWithBomb.indexOf(tileId - maxRow) > -1) ) { count++; }         // top
-      if ( ((tileId - maxRow - 1) > 0) &&  (tilesWithBomb.indexOf(tileId - maxRow - 1) > -1) ) { count++; } // top-left
-      if ( ((tileId - maxRow + 1) > 0) &&  (tilesWithBomb.indexOf(tileId - maxRow + 1) > -1) ) { count++; } // top-right
-      if ( ((tileId - 1) > 0) &&  (tilesWithBomb.indexOf(tileId - 1) > -1) ) { count++; }                   // left
-      if ( ((tileId + 1) > 0) &&  (tilesWithBomb.indexOf(tileId + 1) > -1) ) { count++; }                   // right
-      if ( ((tileId + maxRow) > 0) &&  (tilesWithBomb.indexOf(tileId + maxRow) > -1) ) { count++; }         // bottom
-      if ( ((tileId + maxRow - 1) > 0) &&  (tilesWithBomb.indexOf(tileId + maxRow - 1) > -1) ) { count++; } // bottom-left
-      if ( ((tileId + maxRow + 1) > 0) &&  (tilesWithBomb.indexOf(tileId + maxRow + 1) > -1) ) { count++; } // bottom-right
+      if ( (top_lft(tileId) > 0) &&  (tilesWithBomb.indexOf(top_lft(tileId)) > -1) ) { count++; } // top-left
+      if ( (top_ctr(tileId) > 0) &&  (tilesWithBomb.indexOf(top_ctr(tileId)) > -1) ) { count++; } // top
+      if ( (top_rht(tileId) > 0) &&  (tilesWithBomb.indexOf(top_rht(tileId)) > -1) ) { count++; } // top-right
+      if ( (ctr_rht(tileId) > 0) &&  (tilesWithBomb.indexOf(ctr_rht(tileId)) > -1) ) { count++; } // right
+      if ( (btm_rht(tileId) > 0) &&  (tilesWithBomb.indexOf(btm_rht(tileId)) > -1) ) { count++; } // bottom-right
+      if ( (btm_ctr(tileId) > 0) &&  (tilesWithBomb.indexOf(btm_ctr(tileId)) > -1) ) { count++; } // bottom
+      if ( (btm_lft(tileId) > 0) &&  (tilesWithBomb.indexOf(btm_lft(tileId)) > -1) ) { count++; } // bottom-left
+      if ( (ctr_lft(tileId) > 0) &&  (tilesWithBomb.indexOf(ctr_lft(tileId)) > -1) ) { count++; } // left
     }
     return count;
+  }
+
+  const checkered = (tileId) => {
+    const row = Math.ceil(tileId / maxRow);
+    const col = tileId % maxRow;
+    if ((row + col) % 2 === 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   const gameTiles = (
     <div  className={classes.Game} 
           style={{ cursor: isActive ? 'default' : 'not-allowed' }}>
       {
-        [...Array(maxRow * maxCol)].map( (x, i) =>
+        [...Array(maxNum)].map( (x, i) =>
           <GameTile key={i + 1} id={i + 1} 
             hasbomb={tilesWithBomb.indexOf(i + 1) > -1 ? true : false}
             adjacent={adjValCount(i + 1)}
             flagged={tilesWithFlag.indexOf(i + 1) > -1} 
-            coverShow={!(tilesOpened.indexOf(i + 1) > -1)} 
+            coverShow={(tilesOpened.indexOf(i + 1) === -1)} 
             clicked={() => clickedHandler(i + 1)} 
             flagClicked={() => flagClickedHandler(i + 1)}
             isActive={isActive}
+            shade={checkered(i + 1)}
             /> )
       }
     </div>
