@@ -63,7 +63,7 @@ const Main = () => {
 
   const bombClicked = (tileId) => {
     setIsActive(!isActive);
-    onTileOpened(tileId);
+    tilesWithBomb.map((tile) => onTileOpened(tile));
     setModalIsShown(true);
   }
 
