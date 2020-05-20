@@ -51,11 +51,15 @@ const Main = () => {
       interval = setInterval(() => {
         setSeconds(seconds => seconds + 1);
       }, 1000);
+      if ((maxNum - tilesWithBomb.length - tilesOpened.length) === 0 ) {
+        setGameWon(true);
+        setModalIsShown(true);
+      }
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isActive, seconds]);
+  }, [isActive, seconds, maxNum, tilesWithBomb.length, tilesOpened.length]);
 
   const bombClicked = (tileId) => {
     setIsActive(!isActive);
@@ -68,9 +72,6 @@ const Main = () => {
       return;
     } else if ((tilesWithBomb.indexOf(tileId) > -1)) {
       bombClicked(tileId);
-    } else if (((tilesOpened.length - 1) === (maxRow * maxCol - tilesWithBomb.length)) && (tilesWithBomb.indexOf(tileId) === -1)) {
-      onTileOpened(tileId);
-      setGameWon(true);
     } else if ((tilesOpened.indexOf(tileId) === -1)) {
       onTileOpened(tileId);
       openAround(tileId);
@@ -87,29 +88,27 @@ const Main = () => {
   const ctr_lft = (tileId) => (tileId - 1);             // left
 
   const openAround = (tileId) => {
-
     if ((tileId % maxRow) === 0 ) {               // right edge tile
-      if ( (top_lft(tileId) > 0) && (tilesWithBomb.indexOf(top_lft(tileId)) === -1) && (tilesWithFlag.indexOf(top_lft(tileId)) === -1)  && (tilesOpened.indexOf(top_lft(tileId)) === -1) ) { onTileOpened(top_lft(tileId)) }  // top-left
-      if ( (top_ctr(tileId) > 0) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
-      if ( (btm_ctr(tileId) > 0) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
-      if ( (btm_lft(tileId) > 0) && (tilesWithBomb.indexOf(btm_lft(tileId)) === -1) && (tilesWithFlag.indexOf(btm_lft(tileId)) === -1) && (tilesOpened.indexOf(btm_lft(tileId)) === -1) ) { onTileOpened(btm_lft(tileId)) } // bottom-left
-      if ( (ctr_lft(tileId) > 0) && (tilesWithBomb.indexOf(ctr_lft(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_lft(tileId)) === -1) && (tilesOpened.indexOf(ctr_lft(tileId)) === -1) ) { onTileOpened(ctr_lft(tileId)) } // left
-
+      if ( ((top_lft(tileId) > 0) && (top_lft(tileId) <= maxNum)) && (tilesWithBomb.indexOf(top_lft(tileId)) === -1) && (tilesWithFlag.indexOf(top_lft(tileId)) === -1)  && (tilesOpened.indexOf(top_lft(tileId)) === -1) ) { onTileOpened(top_lft(tileId)) }  // top-left
+      if ( ((top_ctr(tileId) > 0) && (top_ctr(tileId) <= maxNum)) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
+      if ( ((btm_ctr(tileId) > 0) && (btm_ctr(tileId) <= maxNum)) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
+      if ( ((btm_lft(tileId) > 0) && (btm_lft(tileId) <= maxNum)) && (tilesWithBomb.indexOf(btm_lft(tileId)) === -1) && (tilesWithFlag.indexOf(btm_lft(tileId)) === -1) && (tilesOpened.indexOf(btm_lft(tileId)) === -1) ) { onTileOpened(btm_lft(tileId)) } // bottom-left
+      if ( ((ctr_lft(tileId) > 0) && (ctr_lft(tileId) <= maxNum)) && (tilesWithBomb.indexOf(ctr_lft(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_lft(tileId)) === -1) && (tilesOpened.indexOf(ctr_lft(tileId)) === -1) ) { onTileOpened(ctr_lft(tileId)) } // left
     } else if (((tileId - 1) % maxRow) === 0) {   // left edge tile   
-      if ( (top_ctr(tileId) > 0) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
-      if ( (top_rht(tileId) > 0) && (tilesWithBomb.indexOf(top_rht(tileId)) === -1) && (tilesWithFlag.indexOf(top_rht(tileId)) === -1) && (tilesOpened.indexOf(top_rht(tileId)) === -1) ) { onTileOpened(top_rht(tileId)) } // top-right
-      if ( (ctr_rht(tileId) > 0) && (tilesWithBomb.indexOf(ctr_rht(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_rht(tileId)) === -1) && (tilesOpened.indexOf(ctr_rht(tileId)) === -1) ) { onTileOpened(ctr_rht(tileId)) } // right
-      if ( (btm_rht(tileId) > 0) && (tilesWithBomb.indexOf(btm_rht(tileId)) === -1) && (tilesWithFlag.indexOf(btm_rht(tileId)) === -1) && (tilesOpened.indexOf(btm_rht(tileId)) === -1) ) { onTileOpened(btm_rht(tileId)) } // bottom-right
-      if ( (btm_ctr(tileId) > 0) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
+      if ( ((top_ctr(tileId) > 0) && (top_ctr(tileId) <= maxNum)) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
+      if ( ((top_rht(tileId) > 0) && (top_rht(tileId) <= maxNum)) && (tilesWithBomb.indexOf(top_rht(tileId)) === -1) && (tilesWithFlag.indexOf(top_rht(tileId)) === -1) && (tilesOpened.indexOf(top_rht(tileId)) === -1) ) { onTileOpened(top_rht(tileId)) } // top-right
+      if ( ((ctr_rht(tileId) > 0) && (ctr_rht(tileId) <= maxNum)) && (tilesWithBomb.indexOf(ctr_rht(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_rht(tileId)) === -1) && (tilesOpened.indexOf(ctr_rht(tileId)) === -1) ) { onTileOpened(ctr_rht(tileId)) } // right
+      if ( ((btm_rht(tileId) > 0) && (btm_rht(tileId) <= maxNum)) && (tilesWithBomb.indexOf(btm_rht(tileId)) === -1) && (tilesWithFlag.indexOf(btm_rht(tileId)) === -1) && (tilesOpened.indexOf(btm_rht(tileId)) === -1) ) { onTileOpened(btm_rht(tileId)) } // bottom-right
+      if ( ((btm_ctr(tileId) > 0) && (btm_ctr(tileId) <= maxNum)) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
     } else {
-      if ( (top_lft(tileId) > 0) && (tilesWithBomb.indexOf(top_lft(tileId)) === -1) && (tilesWithFlag.indexOf(top_lft(tileId)) === -1)  && (tilesOpened.indexOf(top_lft(tileId)) === -1) ) { onTileOpened(top_lft(tileId)) }  // top-left
-      if ( (top_ctr(tileId) > 0) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
-      if ( (top_rht(tileId) > 0) && (tilesWithBomb.indexOf(top_rht(tileId)) === -1) && (tilesWithFlag.indexOf(top_rht(tileId)) === -1) && (tilesOpened.indexOf(top_rht(tileId)) === -1) ) { onTileOpened(top_rht(tileId)) } // top-right
-      if ( (ctr_rht(tileId) > 0) && (tilesWithBomb.indexOf(ctr_rht(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_rht(tileId)) === -1) && (tilesOpened.indexOf(ctr_rht(tileId)) === -1) ) { onTileOpened(ctr_rht(tileId)) } // right
-      if ( (btm_rht(tileId) > 0) && (tilesWithBomb.indexOf(btm_rht(tileId)) === -1) && (tilesWithFlag.indexOf(btm_rht(tileId)) === -1) && (tilesOpened.indexOf(btm_rht(tileId)) === -1) ) { onTileOpened(btm_rht(tileId)) } // bottom-right
-      if ( (btm_ctr(tileId) > 0) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
-      if ( (btm_lft(tileId) > 0) && (tilesWithBomb.indexOf(btm_lft(tileId)) === -1) && (tilesWithFlag.indexOf(btm_lft(tileId)) === -1) && (tilesOpened.indexOf(btm_lft(tileId)) === -1) ) { onTileOpened(btm_lft(tileId)) } // bottom-left
-      if ( (ctr_lft(tileId) > 0) && (tilesWithBomb.indexOf(ctr_lft(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_lft(tileId)) === -1) && (tilesOpened.indexOf(ctr_lft(tileId)) === -1) ) { onTileOpened(ctr_lft(tileId)) } // left
+      if ( ((top_lft(tileId) > 0) && (top_lft(tileId) <= maxNum)) && (tilesWithBomb.indexOf(top_lft(tileId)) === -1) && (tilesWithFlag.indexOf(top_lft(tileId)) === -1)  && (tilesOpened.indexOf(top_lft(tileId)) === -1) ) { onTileOpened(top_lft(tileId)) }  // top-left
+      if ( ((top_ctr(tileId) > 0) && (top_ctr(tileId) <= maxNum)) && (tilesWithBomb.indexOf(top_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(top_ctr(tileId)) === -1) && (tilesOpened.indexOf(top_ctr(tileId)) === -1) ) { onTileOpened(top_ctr(tileId)) } // top
+      if ( ((top_rht(tileId) > 0) && (top_rht(tileId) <= maxNum)) && (tilesWithBomb.indexOf(top_rht(tileId)) === -1) && (tilesWithFlag.indexOf(top_rht(tileId)) === -1) && (tilesOpened.indexOf(top_rht(tileId)) === -1) ) { onTileOpened(top_rht(tileId)) } // top-right
+      if ( ((ctr_rht(tileId) > 0) && (ctr_rht(tileId) <= maxNum)) && (tilesWithBomb.indexOf(ctr_rht(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_rht(tileId)) === -1) && (tilesOpened.indexOf(ctr_rht(tileId)) === -1) ) { onTileOpened(ctr_rht(tileId)) } // right
+      if ( ((btm_rht(tileId) > 0) && (btm_rht(tileId) <= maxNum)) && (tilesWithBomb.indexOf(btm_rht(tileId)) === -1) && (tilesWithFlag.indexOf(btm_rht(tileId)) === -1) && (tilesOpened.indexOf(btm_rht(tileId)) === -1) ) { onTileOpened(btm_rht(tileId)) } // bottom-right
+      if ( ((btm_ctr(tileId) > 0) && (btm_ctr(tileId) <= maxNum)) && (tilesWithBomb.indexOf(btm_ctr(tileId)) === -1) && (tilesWithFlag.indexOf(btm_ctr(tileId)) === -1) && (tilesOpened.indexOf(btm_ctr(tileId)) === -1) ) { onTileOpened(btm_ctr(tileId)) } // bottom
+      if ( ((btm_lft(tileId) > 0) && (btm_lft(tileId) <= maxNum)) && (tilesWithBomb.indexOf(btm_lft(tileId)) === -1) && (tilesWithFlag.indexOf(btm_lft(tileId)) === -1) && (tilesOpened.indexOf(btm_lft(tileId)) === -1) ) { onTileOpened(btm_lft(tileId)) } // bottom-left
+      if ( ((ctr_lft(tileId) > 0) && (ctr_lft(tileId) <= maxNum)) && (tilesWithBomb.indexOf(ctr_lft(tileId)) === -1) && (tilesWithFlag.indexOf(ctr_lft(tileId)) === -1) && (tilesOpened.indexOf(ctr_lft(tileId)) === -1) ) { onTileOpened(ctr_lft(tileId)) } // left
     }
   }
 
@@ -212,8 +211,8 @@ const Main = () => {
         reStartClicked={gameRestartHandler}
         toggle={toggleStart}
         isActive={isActive}
-        flagCount={tilesWithFlag.length}
-        clearedCount={tilesOpened.length}
+        flagCount={gameCompleted ? null : tilesWithFlag.length}
+        clearedCount={gameCompleted ? null : (maxNum - tilesWithBomb.length - tilesOpened.length)}
         >
           {seconds}
         </Toolbar>
