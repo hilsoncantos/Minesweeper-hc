@@ -52,6 +52,7 @@ const Main = () => {
         setSeconds(seconds => seconds + 1);
       }, 1000);
       if ((maxNum - tilesWithBomb.length - tilesOpened.length) === 0 ) {
+        setIsActive(!isActive);
         setGameWon(true);
         setModalIsShown(true);
       }
@@ -61,8 +62,10 @@ const Main = () => {
     return () => clearInterval(interval);
   }, [isActive, seconds, maxNum, tilesWithBomb.length, tilesOpened.length]);
 
-  const bombClicked = (tileId) => {
+  const bombClicked = () => {
     setIsActive(!isActive);
+    setGameCompleted(true);
+    setGameWon(false);
     tilesWithBomb.map((tile) => onTileOpened(tile));
     setModalIsShown(true);
   }
@@ -71,7 +74,7 @@ const Main = () => {
     if ((tilesWithFlag.indexOf(tileId) > -1)) {
       return;
     } else if ((tilesWithBomb.indexOf(tileId) > -1)) {
-      bombClicked(tileId);
+      bombClicked();
     } else if ((tilesOpened.indexOf(tileId) === -1)) {
       onTileOpened(tileId);
       openAround(tileId);
